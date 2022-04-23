@@ -2,11 +2,12 @@ import pandas as pd
 import numpy as np
 import re, string, random
 import cleantext
+import nltk
 
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk import FreqDist, classify, NaiveBayesClassifier
 from cleantext import clean
 
@@ -60,14 +61,24 @@ df_tweets['text'] = df_tweets['text'].str.replace('&lt', '', regex=True)
 # letters to lower case
 df_tweets['text'] = df_tweets['text'].astype(str).str.lower()
 
-# make new csv with clean data set
+# remove stop words
+# throws warning: FutureWarning: The default value of regex will change from True to False in a future version, disregard
+stop = stopwords.words('english')
+pat_stopwords = r'\b(?:{})\b'.format('|'.join(stop))
+df_tweets['text'] = df_tweets['text'].str.replace(pat_stopwords, '')
+df_tweets['text'] = df_tweets['text'].str.replace(r'\s+', ' ')
+
+# tokenize our tweets data frame
+regexp = RegexpTokenizer('\w+')
+df_tweets_tokenized = df_tweets['text'].apply(regexp.tokenize)
+
+# make new csv with clean data set for testing
 df_tweets.to_csv('clean_data.csv', encoding='utf-8', index=True)
+df_tweets_tokenized.to_csv('clean_data_tokenize', encoding='utf-8', index=True)
 print('finished csv transformation')
 
 
 
-# remove small words
-#stopwords = nltk.corpus.stopwords.words("english")
 
 
 
