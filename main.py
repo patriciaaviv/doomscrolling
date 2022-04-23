@@ -1,10 +1,31 @@
+import pandas as pd
+import numpy as np
+import re, string, random
+
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
 from nltk import FreqDist, classify, NaiveBayesClassifier
 
-import re, string, random
+# Read data from yesterday
+tweets_2204 = pd.read_csv('0422_UkraineCombinedTweetsDeduped.csv', low_memory=False)
+
+# drop unnecessary columns
+df_tweets = tweets_2204.drop(
+    ['userid', 'acctdesc', 'location', 'usercreatedts', 'tweetid', 'tweetcreatedts', 'coordinates', 'extractedts',
+     'is_retweet',
+     'original_tweet_id', 'original_tweet_userid', 'original_tweet_username',
+     'in_reply_to_status_id', 'in_reply_to_user_id',
+     'in_reply_to_screen_name', 'is_quote_status'], axis=1)
+
+# drop non-english tweets
+df_tweets = df_tweets[df_tweets['language'] == "en"]
+
+# TODO for later, check if user is bot, for now skipping
+
+# drop non-ascii characters, if ascii character is detected -> replace with ""
+tweets_2204['text'] = tweets_2204['text'].replace(to_replace="/[^ -~]+/g", value="", regex=True)
 
 
 def remove_noise(tweet_tokens, stop_words=()):
@@ -88,5 +109,3 @@ if __name__ == "__main__":
     print("Accuracy is:", classify.accuracy(classifier, test_data))
 
     print(classifier.show_most_informative_features(10))
-
-
