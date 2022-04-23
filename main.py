@@ -59,8 +59,8 @@ df_tweets['text'] = df_tweets['text'].str.replace('&lt', '', regex=True)
 
 df_tweets.to_csv('clean_data.csv', encoding='utf-8', index=True)
 
-
 # tokenize
+
 
 # drop numbers?
 
