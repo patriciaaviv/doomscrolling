@@ -57,7 +57,19 @@ df_tweets['text'] = df_tweets['text'].str.replace('&amp', '', regex=True)
 df_tweets['text'] = df_tweets['text'].str.replace('&gt', '', regex=True)
 df_tweets['text'] = df_tweets['text'].str.replace('&lt', '', regex=True)
 
+# letters to lower case
+df_tweets['text'] = df_tweets['text'].astype(str).str.lower()
+
+# make new csv with clean data set
 df_tweets.to_csv('clean_data.csv', encoding='utf-8', index=True)
+print('finished csv transformation')
+
+
+
+# remove small words
+#stopwords = nltk.corpus.stopwords.words("english")
+
+
 
 # tokenize
 
