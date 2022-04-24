@@ -3,6 +3,10 @@ import numpy as np
 import re, string, random
 import cleantext
 import nltk
+nltk.download('stopwords')
+nltk.download('twitter_samples')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
 
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.snowball import SnowballStemmer
