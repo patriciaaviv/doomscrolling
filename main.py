@@ -176,7 +176,7 @@ if __name__ == "__main__":
 
     print("Accuracy is:", classify.accuracy(classifier, test_data))
 
-    print(classifier.show_most_informative_features(10))
+    #print(classifier.show_most_informative_features(10))
 
     # apply classifier on our data set
     # iterate through tokenized df and apply classify function to each value in 'text'

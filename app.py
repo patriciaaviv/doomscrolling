@@ -13,7 +13,7 @@ df = pd.read_csv('clean_data_tokenize_results.csv')
 @app.route('/api', methods=["GET"])
 def getData():
     try:
-        
+
 
 
     except Exception:
