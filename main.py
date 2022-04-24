@@ -74,23 +74,19 @@ pat_stopwords = r'\b(?:{})\b'.format('|'.join(stop))
 df_tweets['text'] = df_tweets['text'].str.replace(pat_stopwords, '')
 df_tweets['text'] = df_tweets['text'].str.replace(r'\s+', ' ')
 
+# replace numbers/digits with empty space
+df_tweets['text'] = df_tweets['text'].replace(to_replace=r"\d+", value=r" ", regex=True)
+
 # tokenize our tweets data frame
 regexp = RegexpTokenizer('\w+')
 df_tweets_tokenized = df_tweets['text'].apply(regexp.tokenize)
 
-# remove infrequent words, doesn't work rn
-# df_tweets_tokenized['text'] = df_tweets_tokenized['text'].apply(lambda x: ' '.join([item for item in x if len(item)>2]))
-
-# TODO: drop numbers?
-
-# make new csv with clean data set for testing
-df_tweets.to_csv('clean_data.csv', encoding='utf-8', index=True)
+# make new csv with clean data set for testing purposes
 df_tweets_tokenized.to_csv('clean_data_tokenize.csv', encoding='utf-8', index=False)
-print('finished csv transformation')
+print('finished csv transformation for the first run')
 
 
-# more accuracy -> implement lemmatization and/or stemming
-
+# TODO: more accuracy -> implement lemmatization and/or stemming
 
 #
 # preprocessing functions
@@ -100,7 +96,7 @@ def remove_noise(tweet_tokens, stop_words=()):
     cleaned_tokens = []
 
     for token, tag in pos_tag(tweet_tokens):
-        token = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|' \
+        token = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|'
                        '(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)
         token = re.sub("(@[A-Za-z0-9_]+)", "", token)
 
@@ -132,11 +128,9 @@ def get_tweets_for_model(cleaned_tokens_list):
 
 if __name__ == "__main__":
 
-    # training set
+    # training model
     positive_tweets = twitter_samples.strings('positive_tweets.json')
     negative_tweets = twitter_samples.strings('negative_tweets.json')
-
-    # text = twitter_samples.strings('tweets.20150430-223406.json')
 
     tweet_tokens = twitter_samples.tokenized('positive_tweets.json')[0]
 
@@ -194,7 +188,6 @@ if __name__ == "__main__":
 
     df_tweets_tokenized = pd.DataFrame(df_tweets_tokenized)
     df_tweets_tokenized['sentiment'] = results
-    print(df_tweets_tokenized.head())
 
-
-
+    # make new csv with resulting data set
+    df_tweets_tokenized.to_csv('clean_data_tokenize_results.csv', encoding='utf-8', index=False)
