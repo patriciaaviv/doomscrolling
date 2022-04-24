@@ -10,14 +10,15 @@ FlaskJSON(app)
 
 df = pd.read_csv('clean_data_tokenize_results.csv')
 
-@app.route('/api', methods=["GET"])
-def getData():
-    try:
+# still incomplete
+#@app.route('/api', methods=["GET"])
+#def getData():
+#    try:
 
 
 
-    except Exception:
-        return "{\"value\": -1}"
+ #   except Exception:
+ #       return "{\"value\": -1}"
 
 
 if __name__ == '__main__':
