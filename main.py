@@ -48,21 +48,21 @@ df_tweets = df_tweets[df_tweets['text'] != ""]
 df_tweets['text'] = df_tweets['text'].str.replace('@[A-Za-z0-9]+\s?', '', regex=True)
 
 # remove underscore
-df_tweets['text'] = df_tweets['text'].str.replace('_', '', regex=True)
+df_tweets['text'] = df_tweets['text'].str.replace('_', '')
 
 # remove hashtags
-df_tweets['text'] = df_tweets['text'].str.replace('#', '', regex=True)
+df_tweets['text'] = df_tweets['text'].str.replace('#', '')
 
-df_tweets['text'] = df_tweets['text'].str.replace('.', '', regex=True)
-df_tweets['text'] = df_tweets['text'].str.replace(',', '', regex=True)
+df_tweets['text'] = df_tweets['text'].str.replace('.', '')
+df_tweets['text'] = df_tweets['text'].str.replace(',', '')
 
 # remove html code
 # df_tweets['text'] = [re.sub(r'/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-fA-F]{1,6});/ig','', str(x)) for x in df_tweets['text']]
 # df_tweets['text'].replace({r"/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-fA-F]{1,6});/ig": ''}, inplace=True, regex=True)
 # both approaches don't work, fix with hardcode for now
-df_tweets['text'] = df_tweets['text'].str.replace('&amp', '', regex=True)
-df_tweets['text'] = df_tweets['text'].str.replace('&gt', '', regex=True)
-df_tweets['text'] = df_tweets['text'].str.replace('&lt', '', regex=True)
+df_tweets['text'] = df_tweets['text'].str.replace('&amp', '')
+df_tweets['text'] = df_tweets['text'].str.replace('&gt', '')
+df_tweets['text'] = df_tweets['text'].str.replace('&lt', '')
 
 # letters to lower case
 df_tweets['text'] = df_tweets['text'].astype(str).str.lower()
@@ -130,9 +130,6 @@ def get_tweets_for_model(cleaned_tokens_list):
         yield dict([token, True] for token in tweet_tokens)
 
 
-
-
-
 if __name__ == "__main__":
 
     # training set
@@ -188,15 +185,16 @@ if __name__ == "__main__":
     print(classifier.show_most_informative_features(10))
 
     # apply classifier on our data set
-    #print(df_tweets_tokenized[4], classifier.classify(dict([token, True] for token in df_tweets_tokenized[4])))
     # iterate through tokenized df and apply classify function to each value in 'text'
-    # pass the results in format "tweet" : "positive/negative' in result df
-
-    # generate new df for saving the results
-    data = {'tweet':[], 'result':[]}
-    df_result = pd.DataFrame(data)
-
+    # pass the results in format "tweet" : "positive/negative' in sentiment column
+    results = []
     # iterate through token df and apply function
-    
+    for column in df_tweets_tokenized:
+        results.append(classifier.classify(dict([token, True] for token in column)))
 
-    # df_results = df_tweets_tokenized['text'].apply(lambda x: classifier.classify(dict))
+    df_tweets_tokenized = pd.DataFrame(df_tweets_tokenized)
+    df_tweets_tokenized['sentiment'] = results
+    print(df_tweets_tokenized.head())
+
+
+
